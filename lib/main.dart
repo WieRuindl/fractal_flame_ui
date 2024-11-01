@@ -1,68 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:fractal_flame/drawer.dart';
+import 'package:fractal_flame/id_generator.dart';
+import 'package:fractal_flame/my_painter.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var generateId = await IdGenerator.generateId();
+  runApp(MyApp(id: generateId));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String id;
+
+  const MyApp({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    print('generateId: ${id.hashCode}');
+    print('size: ${MediaQuery.of(context).size.toString()}');
+    final generateImage = MyDrawer.generateImage(
+        id.hashCode,
+        MediaQuery.of(context).size,
     );
-  }
-}
+    print('image generated');
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SafeArea(
+        child: LayoutBuilder(
+          builder: (_, constraints) => SizedBox(
+            width: constraints.widthConstraints().maxWidth,
+            height: constraints.heightConstraints().maxHeight,
+            child: CustomPaint(painter: MyPainter(generateImage: generateImage)),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

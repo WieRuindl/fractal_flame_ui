@@ -10,6 +10,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  dart_numerics: ^0.0.6
+  device_info_plus: ^11.1.0
 
 dev_dependencies:
   flutter_test:
