@@ -26,7 +26,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   ui.Image? image;
   Uint8List? uint8List;
-  bool isGenerating = false;
 
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
@@ -84,10 +83,11 @@ class _MyAppState extends State<MyApp> {
                   TextButton(
                     onPressed: () async {
                       var url = Uri.https(
+                      // var url = Uri.http(
                           'fractal-flame-backend.onrender.com',
+                          // 'localhost:8080',
                           '/generate/${_widthController.text}/${_heightController.text}/2/${_sidController.text}'
                       );
-                      isGenerating = true;
                       print("URL: ${url.toString()}");
                       var response = await http.get(url);
                       print("got response");
@@ -124,8 +124,6 @@ class _MyAppState extends State<MyApp> {
                             },
                             child: const Text("Download"),
                           ),
-                        if (image == null && isGenerating)
-                          const CircularProgressIndicator()
                       ],
                     ),
                   ),
