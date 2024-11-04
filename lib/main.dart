@@ -59,7 +59,9 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                   onPressed: () async {
                     // var url = Uri.http('10.0.2.2:8080', '/generate/400/600/0');
-                    var url = Uri.http('localhost:8080', '/generate/400/600/2/0');
+                    // var url = Uri.http('localhost:8080', '/generate/400/600/2/0');
+                    var url = Uri.https('fractal-flame-backend.onrender.com', '/generate/400/600/2/0');
+
                     print(url.toString());
                     var response = await http.get(url);
                     print("got response");
