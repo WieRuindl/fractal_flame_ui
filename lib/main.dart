@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
                     // var url = Uri.http('localhost:8080', '/generate/400/600/2/0');
                     var url = Uri.https('fractal-flame-backend.onrender.com', '/generate/400/600/2/0');
 
-                    print(url.toString());
+                    print("URL: ${url.toString()}");
                     var response = await http.get(url);
                     print("got response");
 
