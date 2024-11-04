@@ -137,11 +137,15 @@ class _MyAppState extends State<MyApp> {
 
   void downloadImage(Uint8List imageBytes) {
     final base64 = base64Encode(imageBytes);
-    html.AnchorElement(
-      href: 'data:image/png;base64,$base64',
-    )
-      ..setAttribute("download", "downloaded_image.png")
-      ..click();
+    final newWindow = html.window.open(
+        'data:image/png;base64,$base64',
+        '_blank'
+    );
+    // html.AnchorElement(
+    //   href: 'data:image/png;base64,$base64',
+    // )
+    //   ..setAttribute("download", "downloaded_image.png")
+    //   ..click();
   }
 
   Future<ui.Image> decodeImageFromUint8List(Uint8List imageData) async {
