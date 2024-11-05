@@ -132,7 +132,7 @@ class _MyAppState extends State<MyApp> {
                         'fractal-flame-backend.onrender.com',
                         // '10.0.2.2:8080',
                         // 'localhost:8080',
-                        '/generate/${_widthController.text}/${_heightController.text}/2/${_sidController.text}');
+                        '/generate/${_widthController.text}/${_heightController.text}/2/${_sidController.text}/{}/$selectedFunction');
                     var response = await http.get(url);
 
                     final Map<String, dynamic> data = json.decode(response.body);
