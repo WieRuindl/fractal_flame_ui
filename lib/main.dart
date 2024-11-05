@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fractal_flame/id_generator.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -164,22 +164,22 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> downloadImage(Uint8List imageBytes) async {
-    print("SAVE");
-
-    var status = await Permission.storage.request();
-    if (status.isGranted) {
-      // Save the image
-      final result = await ImageGallerySaver.saveImage(imageBytes);
-      if (result['isSuccess']) {
-        print("Image saved to gallery");
-      } else {
-        print("Failed to save image");
-      }
-    } else {
-      print("Storage permission denied");
-    }
-  }
+  // Future<void> downloadImage(Uint8List imageBytes) async {
+  //   print("SAVE");
+  //
+  //   var status = await Permission.storage.request();
+  //   if (status.isGranted) {
+  //     // Save the image
+  //     final result = await ImageGallerySaver.saveImage(imageBytes);
+  //     if (result['isSuccess']) {
+  //       print("Image saved to gallery");
+  //     } else {
+  //       print("Failed to save image");
+  //     }
+  //   } else {
+  //     print("Storage permission denied");
+  //   }
+  // }
 
   void downloadImageWeb(Uint8List imageBytes) {
     // Convert the image bytes to Base64
