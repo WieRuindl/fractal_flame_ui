@@ -11,8 +11,8 @@ import 'package:http/http.dart' as http;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var generateId = await IdGenerator.generateId();
-  var url = Uri.http(
-      'localhost:8080',
+  var url = Uri.https(
+      'fractal-flame-backend.onrender.com',
       '/functions');
   var response = await http.get(url);
   List<String> data = jsonDecode(response.body).cast<String>();
