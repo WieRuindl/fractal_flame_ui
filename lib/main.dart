@@ -7,20 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fractal_flame/id_generator.dart';
 import 'package:http/http.dart' as http;
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var generateId = await IdGenerator.generateId();
-
-  runApp(MyApp(id: generateId));
+  var url = Uri.http(
+      'localhost:8080',
+      '/functions');
+  var response = await http.get(url);
+  List<String> data = jsonDecode(response.body).cast<String>();
+  runApp(MyApp(id: generateId, functions: data));
 }
 
 class MyApp extends StatefulWidget {
   final String id;
+  final List<String> functions;
 
-  const MyApp({super.key, required this.id});
+  const MyApp({super.key, required this.id, required this.functions});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -30,6 +33,7 @@ class _MyAppState extends State<MyApp> {
   ui.Image? image;
   Uint8List? uint8List;
   bool isLoading = false;
+  String? selectedFunction;
 
   final TextEditingController _widthController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
@@ -87,6 +91,29 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ],
                 ),
+                Row(
+                  children: [
+                    const Text("function:"),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DropdownButton<String>(
+                          // hint: Text("Select an option"),
+                          value: selectedFunction,
+                          items: widget.functions.map((String item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedFunction = newValue;
+                            });
+                          },
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 TextButton(
                   style: ButtonStyle(
@@ -95,7 +122,6 @@ class _MyAppState extends State<MyApp> {
                     fixedSize: const WidgetStatePropertyAll(Size(100, 50)),
                   ),
                   onPressed: () async {
-                    print("BEFORE LOAD METHOD");
 
                     setState(() {
                       this.isLoading = true;
@@ -107,9 +133,7 @@ class _MyAppState extends State<MyApp> {
                         // '10.0.2.2:8080',
                         // 'localhost:8080',
                         '/generate/${_widthController.text}/${_heightController.text}/2/${_sidController.text}');
-                    print("URL: ${url.toString()}");
                     var response = await http.get(url);
-                    print("got response");
 
                     final Map<String, dynamic> data = json.decode(response.body);
                     final String base64Image = data['image'];
@@ -147,7 +171,6 @@ class _MyAppState extends State<MyApp> {
                           fixedSize: const WidgetStatePropertyAll(Size(100, 50)),
                         ),
                         onPressed: () async {
-                          print("BEFORE SAVE METHOD");
                           // await downloadImage(uint8List!);
                           downloadImageWeb(uint8List!);
 
@@ -164,32 +187,12 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // Future<void> downloadImage(Uint8List imageBytes) async {
-  //   print("SAVE");
-  //
-  //   var status = await Permission.storage.request();
-  //   if (status.isGranted) {
-  //     // Save the image
-  //     final result = await ImageGallerySaver.saveImage(imageBytes);
-  //     if (result['isSuccess']) {
-  //       print("Image saved to gallery");
-  //     } else {
-  //       print("Failed to save image");
-  //     }
-  //   } else {
-  //     print("Storage permission denied");
-  //   }
-  // }
-
   void downloadImageWeb(Uint8List imageBytes) {
     // Convert the image bytes to Base64
     final base64Image = base64Encode(imageBytes);
-
-    // Create a data URL with the Base64 string
     final url = 'data:image/png;base64,$base64Image';
 
-    // Create an anchor element with the download attribute
-    final anchor = html.AnchorElement(href: url)
+    html.AnchorElement(href: url)
       ..setAttribute("download", "downloaded_image.png")
       ..click();
   }
